@@ -90,7 +90,7 @@ class TFUniformReplayBufferTest(parameterized.TestCase, tf.test.TestCase):
     replay_buffer = tf_uniform_replay_buffer.TFUniformReplayBuffer(
         spec, batch_size=1, max_length=10)
 
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         tf.errors.InvalidArgumentError, 'TFUniformReplayBuffer is empty. Make '
         'sure to add items before sampling the buffer.'):
       self.evaluate(tf.compat.v1.global_variables_initializer())
@@ -579,7 +579,7 @@ class TFUniformReplayBufferTest(parameterized.TestCase, tf.test.TestCase):
         spec, batch_size=2, max_length=3,
         # If this isn't turned on, then the batching works fine.
         dataset_drop_remainder=True)
-    with self.assertRaisesRegexp(ValueError, 'ALL data will be dropped'):
+    with self.assertRaisesRegex(ValueError, 'ALL data will be dropped'):
       replay_buffer.as_dataset(
           single_deterministic_pass=True, sample_batch_size=3)
 
@@ -589,7 +589,7 @@ class TFUniformReplayBufferTest(parameterized.TestCase, tf.test.TestCase):
         spec, batch_size=2, max_length=3,
         # If this isn't turned on, then the batching works fine.
         dataset_drop_remainder=True)
-    with self.assertRaisesRegexp(ValueError, 'ALL data will be dropped'):
+    with self.assertRaisesRegex(ValueError, 'ALL data will be dropped'):
       replay_buffer.as_dataset(
           single_deterministic_pass=True, num_steps=4)
 
