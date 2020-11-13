@@ -129,7 +129,7 @@ class ScalarizeObjectivesTest(test_utils.TestCase):
 
   def testScalarizeObjectivesWrongInputRankRaisesError(self):
     objectives_tensor = tf.constant([1], dtype=tf.float32)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError, 'The objectives_tensor should be rank-3, but is rank-1'):
       greedy_multi_objective_policy.scalarize_objectives(
           objectives_tensor, self._scalarizer)
@@ -137,7 +137,7 @@ class ScalarizeObjectivesTest(test_utils.TestCase):
   def testScalarizeObjectivesWrongNumberOfObjectiveRaisesError(self):
     objectives_tensor = tf.constant([[[1, 2, 3]], [[4, 5, 6]]],
                                     dtype=tf.float32)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError, 'The number of input objectives should be 3, but is 1'):
       self.evaluate(
           greedy_multi_objective_policy.scalarize_objectives(
@@ -226,7 +226,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
 
   def testMultipleActionsRaiseError(self):
     action_spec = [tensor_spec.BoundedTensorSpec((), tf.int32, 0, 2)] * 2
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         NotImplementedError,
         'action_spec can only contain a single BoundedTensorSpec'):
       greedy_multi_objective_policy.GreedyMultiObjectiveNeuralPolicy(
@@ -234,7 +234,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
           self._create_objective_networks())
 
   def testTooFewNetworksRaiseError(self):
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError,
         'Number of objectives should be at least two, but found to be 1'):
       greedy_multi_objective_policy.GreedyMultiObjectiveNeuralPolicy(
@@ -243,7 +243,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
 
   def testWrongActionsRaiseError(self):
     action_spec = tensor_spec.BoundedTensorSpec((5, 6, 7), tf.float32, 0, 2)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         NotImplementedError,
         'action_spec must be a BoundedTensorSpec of type int32.*'):
       greedy_multi_objective_policy.GreedyMultiObjectiveNeuralPolicy(
@@ -257,7 +257,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
         self._create_objective_networks())
     observations = tf.constant([[1, 2], [2, 1]], dtype=tf.float32)
     time_step = ts.restart(observations, batch_size=2)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError,
         r'The number of actions \(11\) does not match objective network 0'
         r' output size \(3\)\.'):
@@ -269,7 +269,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
         self._create_objective_networks())
     observations = tf.constant([[1, 2], [2, 1]], dtype=tf.float32)
     time_step = ts.restart(observations, batch_size=2)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError,
         'policy_state and policy_state_spec structures do not match:'):
       policy.action(time_step, policy_state=[()])
@@ -419,7 +419,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
         global_and_arm_feature_network.create_feed_forward_common_tower_network(
             obs_spec, (4, 3), (3, 4), (4, 2)) for _ in range(3)
     ]
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError,
         'time_step_spec should not be None for per-arm-features policies'):
       greedy_multi_objective_policy.GreedyMultiObjectiveNeuralPolicy(
