@@ -967,7 +967,7 @@ class NetworkVariableChecks(tf.test.TestCase):
         tensor_spec.TensorSpec([3], tf.float32), self._action_spec, layer_2)
     q_net_1.create_variables()
     q_net_2.create_variables()
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError, 'Input tensor specs of network and target network '
         'do not match'):
       common.check_matching_networks(q_net_1, q_net_2)
@@ -981,7 +981,7 @@ class NetworkVariableChecks(tf.test.TestCase):
                                                  self._action_spec, layer_2)
     q_net_1.create_variables()
     q_net_2.create_variables()
-    with self.assertRaisesRegexp(ValueError, 'Variables lengths do not match'):
+    with self.assertRaisesRegex(ValueError, 'Variables lengths do not match'):
       common.check_matching_networks(q_net_1, q_net_2)
 
   def test_check_matching_networks_different_shape(self):
@@ -993,7 +993,7 @@ class NetworkVariableChecks(tf.test.TestCase):
                                                  self._action_spec, layer_2)
     q_net_1.create_variables()
     q_net_2.create_variables()
-    with self.assertRaisesRegexp(ValueError,
+    with self.assertRaisesRegex(ValueError,
                                  'Variable dtypes or shapes do not match'):
       common.check_matching_networks(q_net_1, q_net_2)
 
