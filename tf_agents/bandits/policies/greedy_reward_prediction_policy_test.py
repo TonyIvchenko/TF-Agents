@@ -115,7 +115,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
 
   def testMultipleActionsRaiseError(self):
     action_spec = [tensor_spec.BoundedTensorSpec((), tf.int32, 0, 2)] * 2
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         NotImplementedError,
         'action_spec can only contain a single BoundedTensorSpec'):
       greedy_reward_policy.GreedyRewardPredictionPolicy(
@@ -125,7 +125,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
 
   def testWrongActionsRaiseError(self):
     action_spec = tensor_spec.BoundedTensorSpec((5, 6, 7), tf.float32, 0, 2)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         NotImplementedError,
         'action_spec must be a BoundedTensorSpec of type int32.*'):
       greedy_reward_policy.GreedyRewardPredictionPolicy(
@@ -142,7 +142,7 @@ class GreedyRewardPredictionPolicyTest(test_utils.TestCase):
         reward_network=DummyNet(self._obs_spec))
     observations = tf.constant([[1, 2], [3, 4]], dtype=tf.float32)
     time_step = ts.restart(observations, batch_size=2)
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         ValueError,
         r'The number of actions \(11\) does not match the reward_network output'
         r' size \(3\)\.'):
