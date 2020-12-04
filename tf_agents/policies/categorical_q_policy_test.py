@@ -113,7 +113,7 @@ class CategoricalQPolicyTest(test_utils.TestCase):
     self.assertLen(policy.variables(), 2)
 
   def testMultipleActionsRaiseError(self):
-    with self.assertRaisesRegexp(
+    with self.assertRaisesRegex(
         TypeError, '.*action_spec must be a BoundedTensorSpec.*'):
       # Replace the action_spec for this test.
       action_spec = [tensor_spec.BoundedTensorSpec([1], tf.int32, 0, 1)] * 2
