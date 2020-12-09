@@ -41,6 +41,7 @@ class AsyncPolicySaver(object):
     self._export_dir = None
     self._saving_checkpoint = False
     self._join_save_thread = False
+    self._save_error = None
 
     self._save_thread = threading.Thread(target=self._save_loop)
     self._save_thread.start()
@@ -53,20 +54,30 @@ class AsyncPolicySaver(object):
           self._save_condition_variable.wait()
           if self._join_save_thread:
             return
-        if self._saving_checkpoint:
-          logging.info("Saving checkpoint to %s", self._export_dir)
-          self._policy_saver.save_checkpoint(self._export_dir)
-        else:
-          logging.info("Saving policy to %s", self._export_dir)
-          self._policy_saver.save(self._export_dir)
+        try:
+          if self._saving_checkpoint:
+            logging.info("Saving checkpoint to %s", self._export_dir)
+            self._policy_saver.save_checkpoint(self._export_dir)
+          else:
+            logging.info("Saving policy to %s", self._export_dir)
+            self._policy_saver.save(self._export_dir)
+        except Exception as e:  # pylint: disable=broad-except
+          logging.exception("Async save failed.")
+          self._save_error = e
+          self._join_save_thread = True
+          self._export_dir = None
+          self._save_condition_variable.notify_all()
+          return
         self._export_dir = None
-        self._save_condition_variable.notify()
+        self._save_condition_variable.notify_all()
 
   def _assert_save_thread_is_alive(self):
+    if self._save_error is not None:
+      raise ValueError("Saving thread in AsyncPolicySaver failed with: {!r}".
+                       format(self._save_error))
     if self._join_save_thread or not self._save_thread.is_alive():
-      raise ValueError("Saving thread in AsyncPolicySaver is not alive. Either "
-                       "an exception has occured while saving, or the saver "
-                       "was closed.")
+      raise ValueError("Saving thread in AsyncPolicySaver is not alive. The "
+                       "saver was closed.")
 
   def save(self, export_dir: Text, blocking: bool = False):
     """Triggers an async save of the policy to the given `export_dir`.
@@ -135,6 +146,7 @@ class AsyncPolicySaver(object):
       while self._export_dir:
         logging.info("Waiting for AsyncPolicySaver to finish.")
         self._save_condition_variable.wait()
+      self._assert_save_thread_is_alive()
 
   def close(self):
     """Blocks until there is no saving happening and kills the save_thread."""
