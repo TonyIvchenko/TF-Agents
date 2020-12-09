@@ -658,7 +658,7 @@ class PolicySaverTest(test_utils.TestCase, parameterized.TestCase):
       saver.save(path)
 
     reloaded = tf.compat.v2.saved_model.load(path)
-    with self.assertRaisesRegexp(tf.errors.InvalidArgumentError,
+    with self.assertRaisesRegex(tf.errors.InvalidArgumentError,
                                  '_distribution has not been implemented'):
       self.evaluate(
           reloaded.distribution(
