@@ -48,6 +48,12 @@ def get_distribution_strategy(distribution_strategy="default",
     raise ValueError("`num_gpus` can not be negative.")
 
   distribution_strategy = distribution_strategy.lower()
+  valid_strategies = ("off", "default", "one_device", "mirrored")
+  if distribution_strategy not in valid_strategies:
+    raise ValueError(
+        "Unrecognized distribution_strategy '{}'. Supported values are {}."
+        .format(distribution_strategy, valid_strategies))
+
   if distribution_strategy == "off":
     if num_gpus > 1:
       raise ValueError("When {} GPUs are specified, distribution_strategy "
