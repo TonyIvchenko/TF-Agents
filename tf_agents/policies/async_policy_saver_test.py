@@ -106,6 +106,22 @@ class AsyncPolicySaverTest(test_utils.TestCase):
     with self.assertRaises(ValueError):
       async_saver.save(path)
 
+  def testSaveFailureIsSurfaced(self):
+    saver = mock.create_autospec(policy_saver.PolicySaver, instance=True)
+    saver.save.side_effect = RuntimeError('boom')
+    async_saver = async_policy_saver.AsyncPolicySaver(saver)
+    path = os.path.join(self.get_temp_dir(), 'save_model')
+
+    self.evaluate(tf.compat.v1.global_variables_initializer())
+    async_saver.save(path)
+
+    with self.assertRaisesRegex(ValueError, 'boom'):
+      async_saver.flush()
+    with self.assertRaisesRegex(ValueError, 'boom'):
+      async_saver.save(path)
+
+    async_saver.close()
+
 
 if __name__ == '__main__':
   tf.test.main()
