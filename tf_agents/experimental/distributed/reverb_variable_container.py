@@ -82,6 +82,12 @@ class ReverbVariableContainer(object):
                                                   table_info.signature)
     self._tf_client = reverb.TFClient(server_address)
 
+  def _assert_table_exists(self, table: Text) -> None:
+    if table not in self._dtypes:
+      raise KeyError(
+          'Could not find table {}. Available tables: {}.'.format(
+              table, sorted(self._dtypes.keys())))
+
   def push(self,
            values: types.NestedTensor,
            table: Text = DEFAULT_TABLE) -> None:
@@ -98,9 +104,7 @@ class ReverbVariableContainer(object):
         differences (excluding the type differences of sequences in nest), and
         type differences.
     """
-    if table not in self._dtypes:
-      raise KeyError('Could not find the table {}. Available tables: {}'.format(
-          table, self._dtypes.keys()))
+    self._assert_table_exists(table)
 
     # Sequence type check is turned off in Reverb client allowing sequence type
     # differences in the signature. This is required to be able work with
@@ -112,6 +116,7 @@ class ReverbVariableContainer(object):
 
   def pull(self, table: Text = DEFAULT_TABLE) -> types.NestedTensor:
     """Pulls values from a Reverb table and returns them as nested tensors."""
+    self._assert_table_exists(table)
     sample = self._tf_client.sample(table, data_dtypes=[self._dtypes[table]])
     # The data is received in the form of a sequence. In the case of variable
     # container the sequence length is always one.
@@ -132,6 +137,7 @@ class ReverbVariableContainer(object):
         signature of the table. This includes structural differences (excluding
         the type differences of sequences in nest), and type differences.
     """
+    self._assert_table_exists(table)
     self._assign(variables, self.pull(table))
 
   # TODO(b/157554434): Move this to `nest_utils`.
