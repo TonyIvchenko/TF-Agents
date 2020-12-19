@@ -126,7 +126,7 @@ class ReverbVariableContainerTest(parameterized.TestCase, test_utils.TestCase):
   def test_push_raises_key_error_on_unknown_table(self) -> None:
     variable_container = reverb_variable_container.ReverbVariableContainer(
         self._server_address)
-    with self.assertRaises(KeyError):
+    with self.assertRaisesRegex(KeyError, 'unknown_table'):
       variable_container.push(tf.Variable(1), 'unknown_table')
 
   def test_push_raises_error_if_variable_struct_not_match(self) -> None:
@@ -189,7 +189,7 @@ class ReverbVariableContainerTest(parameterized.TestCase, test_utils.TestCase):
   def test_update_raises_key_error_on_unknown_table(self) -> None:
     variable_container = reverb_variable_container.ReverbVariableContainer(
         self._server_address)
-    with self.assertRaises(KeyError):
+    with self.assertRaisesRegex(KeyError, 'unknown_table'):
       variable_container.update(tf.Variable(1), 'unknown_table')
 
   def test_update_raises_value_error_if_variable_struct_not_match(self) -> None:
@@ -219,7 +219,7 @@ class ReverbVariableContainerTest(parameterized.TestCase, test_utils.TestCase):
   def test_pull_raises_key_error_on_unknown_table(self) -> None:
     variable_container = reverb_variable_container.ReverbVariableContainer(
         self._server_address)
-    with self.assertRaises(KeyError):
+    with self.assertRaisesRegex(KeyError, 'unknown_table'):
       variable_container.pull('unknown_table')
 
   @parameterized.named_parameters(
