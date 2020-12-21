@@ -63,8 +63,9 @@ def from_spec(spec):
     elif isinstance(s, (array_spec.ArraySpec, TensorSpec)):
       return TensorSpec.from_spec(s)
     else:
-      raise ValueError("No known conversion from type `%s` to a TensorSpec" %
-                       type(s))
+      raise ValueError(
+          "No known conversion from type `{}` (value: {!r}) to a TensorSpec".
+          format(type(s).__name__, s))
 
   return tf.nest.map_structure(_convert_to_tensor_spec, spec)
 
