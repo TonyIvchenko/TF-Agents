@@ -402,6 +402,16 @@ class FromSpecTest(tf.test.TestCase):
     spec = tensor_spec.from_spec(array_spec.ArraySpec([1], np.string_))
     self.assertEqual(tf.string, spec.dtype)
 
+  def testFromSpecInvalidTypeHasHelpfulMessage(self):
+    class _BadSpec(object):
+
+      def __repr__(self):
+        return 'bad_spec'
+
+    with self.assertRaisesRegex(
+        ValueError, r'from type `_BadSpec` \(value: bad_spec\)'):
+      tensor_spec.from_spec(_BadSpec())
+
 
 class ToPlaceholderTest(tf.test.TestCase):
 
