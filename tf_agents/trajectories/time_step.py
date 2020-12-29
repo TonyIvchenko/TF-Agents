@@ -53,7 +53,7 @@ class TimeStep(
 
   The first `TimeStep` in a sequence will equal `StepType.FIRST`. The final
   `TimeStep` will equal `StepType.LAST`. All other `TimeStep`s in a sequence
-  will equal `StepType.MID.
+  will equal `StepType.MID`.
 
   Attributes:
     step_type: a `Tensor` or array of `StepType` enum values.
@@ -102,7 +102,10 @@ class StepType(object):
     if value == cls.LAST:
       return cls.LAST
 
-    raise ValueError('No known conversion for `%r` into a StepType' % value)
+    raise ValueError(
+        'No known conversion for `{!r}` into a StepType. Valid values are '
+        'StepType.FIRST (0), StepType.MID (1), and StepType.LAST (2).'.format(
+            value))
 
 
 def restart(observation: types.NestedTensorOrArray,
