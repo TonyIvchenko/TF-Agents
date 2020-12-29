@@ -86,6 +86,10 @@ class TimeStepTest(tf.test.TestCase):
     time_step = ts.termination(observation, reward)  # pytype: disable=wrong-arg-types
     self.assertTrue(time_step.is_last())
 
+  def testInvalidStepTypeValueRaises(self):
+    with self.assertRaisesRegex(ValueError, 'Valid values are StepType.FIRST'):
+      ts.StepType(99)
+
   def testLastNumpy(self):
     observation = -1
     reward = 2.0
