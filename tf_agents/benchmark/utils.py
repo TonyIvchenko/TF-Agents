@@ -84,6 +84,10 @@ class TimeHistory(object):
       log_steps: Interval of steps between logging of stats.
       num_steps_per_batch: Number of steps per batch.
     """
+    if batch_size is None or batch_size <= 0:
+      raise ValueError(
+          'batch_size must be a positive number. Received: {}'.format(
+              batch_size))
     self.batch_size = batch_size
     super(TimeHistory, self).__init__()
     self.log_steps = log_steps
