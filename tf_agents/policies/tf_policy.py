@@ -44,7 +44,7 @@ tfd = tfp.distributions
 class TFPolicy(tf.Module):
   """Abstract base class for TF Policies.
 
-  The Policy represents a mapping from `time_steps` recieved from the
+  The Policy represents a mapping from `time_steps` received from the
   environment to `actions` that can be applied to the environment.
 
   Agents expose two policies. A `policy` meant for deployment and evaluation,
