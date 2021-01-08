@@ -16,7 +16,7 @@
 # Lint as: python3
 """Distributed tf.Variable store client for Reverb backend.
 
-This is just a client. The server needs to be consructed and held separately.
+This is just a client. The server needs to be constructed and held separately.
 """
 
 from typing import Iterable, Text
@@ -43,7 +43,8 @@ POLICY_KEY = 'policy_variables'
 class ReverbVariableContainer(object):
   """Distributed in memory tf.Variable store based on Reverb.
 
-  This is just a client. The server needs to be consructed and held separately.
+  This is just a client. The server needs to be constructed and held
+  separately.
 
   **Note:** The container stores nests of variables in dedicated tables in a
   Reverb server. It is assumed that the server is running, the tables for
@@ -74,7 +75,7 @@ class ReverbVariableContainer(object):
       table_info = server_info[table]
       if table_info.max_size != 1:
         raise ValueError(
-            'The max_size of the table {} is {} which different from the '
+            'The max_size of the table {} is {} which is different from the '
             'expected capacity 1.'.format(table, table_info.max_size))
       if not table_info.signature:
         raise TypeError('Signature is not defined for table {}.'.format(table))
