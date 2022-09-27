@@ -159,6 +159,20 @@ class JoinScopeTest(test_utils.TestCase):
     self._test_scopes('', '', '')
 
 
+class SafeHasStateTest(test_utils.TestCase, parameterized.TestCase):
+
+  @parameterized.named_parameters(
+      ('none', None, False),
+      ('empty_tuple', (), False),
+      ('empty_list', [], False),
+      ('nonempty_tuple', (1,), True),
+      ('nonempty_list', [1], True),
+      ('dict', {'k': 'v'}, True),
+  )
+  def testSafeHasState(self, state, expected):
+    self.assertEqual(common.safe_has_state(state), expected)
+
+
 class IndexWithActionsTest(test_utils.TestCase):
 
   def checkCorrect(self,

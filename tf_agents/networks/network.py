@@ -402,7 +402,7 @@ class Network(tf.keras.layers.Layer):
     if "step_type" not in call_argspec.args and not call_argspec.keywords:
       normalized_kwargs.pop("step_type", None)
 
-    if (network_state in (None, ())
+    if (not common.safe_has_state(network_state)
         and "network_state" not in call_argspec.args
         and not call_argspec.keywords):
       normalized_kwargs.pop("network_state", None)
