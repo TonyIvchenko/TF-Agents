@@ -20,8 +20,9 @@ REVERB_DEP_OVERRIDE=false
 TFP_INSTALL=false
 TFP_DEP_OVERRIDE=false
 
-if [[ $# -lt 1 ]] ; then
+print_usage() {
   echo "Usage:"
+  echo "./tests_release.sh [flags]"
   echo "--type [nightly|stable]"
   echo "--tf_dep_override     [Required tensorflow version to pass to setup.py."
   echo "                       Examples: tensorflow==2.3.0rc0  or tensorflow>=2.3.0]"
@@ -34,10 +35,14 @@ if [[ $# -lt 1 ]] ; then
   echo "--tfp_install         [Version of TensorFlow probability to install]"
   echo "--test_colabs         [true to run colab tests.]"
   echo "--pyenv               [true, use pyenv (Being deprecated)]"
-  exit 1
+}
+
+if [[ $# -gt 0 && ( "$1" == "--help" || "$1" == "-h" ) ]]; then
+  print_usage
+  exit 0
 fi
 
-while [[ $# -gt -0 ]]; do
+while [[ $# -gt 0 ]]; do
   key="$1"
   echo $key
   echo $2
@@ -80,6 +85,8 @@ while [[ $# -gt -0 ]]; do
       ;;
     *)
       echo "Unknown flag: $key"
+      print_usage
+      exit 1
       ;;
   esac
   shift # past argument or value
@@ -113,7 +120,7 @@ run_tests() {
   echo "    tf_installs:${TF_INSTALL}"
   echo "    reverb_install:${REVERB_INSTALL}"
   echo "    tfp_install:${TFP_INSTALL}"
-  echo "    tf_dep_override:${REVERB_DEP_OVERRIDE}"
+  echo "    tf_dep_override:${TF_DEP_OVERRIDE}"
   echo "    reverb_dep_override:${REVERB_DEP_OVERRIDE}"
   echo "    tfp_dep_override:${TFP_DEP_OVERRIDE}"
 
@@ -202,7 +209,7 @@ run_tests() {
 if ! which cmake > /dev/null; then
    echo -e "cmake not found! needed for atari_py tests. Install? (y/n) \c"
    read
-   if "$REPLY" = "y"; then
+   if [ "$REPLY" = "y" ]; then
       sudo apt-get install -y cmake zlib1g-dev
    fi
 fi
