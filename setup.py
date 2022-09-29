@@ -22,6 +22,7 @@ import argparse
 import codecs
 import datetime
 import fnmatch
+import importlib.util
 import io
 import os
 import subprocess
@@ -225,14 +226,22 @@ def get_reverb_packages():
 
 def get_version():
   """Returns the version and project name to associate with the build."""
-  from tf_agents.version import __dev_version__  # pylint: disable=g-import-not-at-top
-  from tf_agents.version import __rel_version__  # pylint: disable=g-import-not-at-top
+  version_path = os.path.join(
+      os.path.abspath(os.path.dirname(__file__)), 'tf_agents', 'version.py')
+  spec = importlib.util.spec_from_file_location('tf_agents.version',
+                                                version_path)
+  if spec is None or spec.loader is None:
+    raise RuntimeError('Unable to load tf_agents version metadata.')
+  version_module = importlib.util.module_from_spec(spec)
+  spec.loader.exec_module(version_module)
+  dev_version = version_module.__dev_version__
+  rel_version = version_module.__rel_version__
 
   if FLAGS.release:
-    version = __rel_version__
+    version = rel_version
     project_name = 'tf-agents'
   else:
-    version = __dev_version__
+    version = dev_version
     version += datetime.datetime.now().strftime('%Y%m%d')
     project_name = 'tf-agents-nightly'
   return version, project_name
